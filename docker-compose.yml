@@ -1,6 +1,18 @@
 version: '3.7'
 
 services:
+  # Inspecting tools
+  kafdrop:
+   image: obsidiandynamics/kafdrop
+   container_name: kafdrop
+   ports:
+     - "9000:9000"
+   environment:
+    JVM_OPTS: "-Xms32M -Xmx64M"
+    KAFKA_BROKERCONNECT: kafka1:9092,kafka2:9093,kafka3:9094
+    SERVER_SERVLET_CONTEXTPATH: "/"
+
+  # Cluster configs
   kafka1:
     image: bitnami/kafka:3.7
     hostname: kafka1
