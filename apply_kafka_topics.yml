@@ -3,6 +3,6 @@
   hosts: kafka_brokers
   become: yes
   vars:
-    kafka_zookeeper_connect: "localhost:2181"  # Adjust this as needed
+    kafka_bootstrap_server: "localhost:9092"  # Adjust this as needed
   roles:
     - kafka_topics
