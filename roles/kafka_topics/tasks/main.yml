@@ -1,0 +1,10 @@
+---
+- name: Create Kafka topics
+  community.general.kafka_topic:
+    name: "{{ item.name }}"
+    partitions: "{{ item.partitions | default(1) }}"
+    replicas: "{{ item.replicas | default(1) }}"
+    config: "{{ item.config | default({}) }}"
+    state: present
+    zookeeper: "{{ kafka_zookeeper_connect }}"
+  loop: "{{ kafka_topics }}"
