@@ -1,8 +1,31 @@
 ---
 - name: Apply Kafka Topics
-  hosts: kafka_brokers
+  hosts: localhost
   become: yes
-  vars:
-    kafka_bootstrap_server: "localhost:9092"  # Adjust this as needed
-  roles:
-    - kafka_topics
+  collections:
+    - confluent.platform
+  vars_files:
+    - kafka_topics_vars.yml
+  tasks:
+    # - name: Manage Kafka topics
+    #   ansible.builtin.import_role:
+    #     name: confluent.platform.kafka_topic
+    #   vars:
+    #     name: "{{ item.name }}"
+    #     partitions: "{{ item.partitions | default(1) }}"
+    #     replication_factor: "{{ item.replicas | default(1) }}"
+    #     config: "{{ item.config | default({}) }}"
+    #     state: present
+    #     bootstrap_servers: "{{ kafka_bootstrap_servers }}"
+    #   loop: "{{ kafka_topics }}"
+    
+    
+    - name: Manage Kafka topics
+      confluent.platform.kafka_topic:
+        name: "{{ item.name }}"
+        partitions: "{{ item.partitions | default(1) }}"
+        replication_factor: "{{ item.replicas | default(1) }}"
+        config: "{{ item.config | default({}) }}"
+        state: present
+        bootstrap_servers: "{{ kafka_bootstrap_servers }}"
+      loop: "{{ kafka_topics }}"

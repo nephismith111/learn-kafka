@@ -1,10 +1,11 @@
 ---
-- name: Create Kafka topics
-  community.general.kafka_topic:
+- name: Manage Kafka topics
+  confluent.platform.kafka_topic:
     name: "{{ item.name }}"
     partitions: "{{ item.partitions | default(1) }}"
     replication_factor: "{{ item.replicas | default(1) }}"
     config: "{{ item.config | default({}) }}"
     state: present
-    bootstrap_servers: "{{ kafka_bootstrap_server }}"
+    bootstrap_servers: "{{ kafka_bootstrap_servers }}"
   loop: "{{ kafka_topics }}"
+  
