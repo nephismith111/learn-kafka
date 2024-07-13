@@ -1,0 +1,36 @@
+#######
+# 3 Node Kafka Cluster - All three nodes need to know about each other for cluster stability in the event of a failure
+# Node    Controller Port     External Port   Host IP
+# 1       ${PORT_CTL_K1:-9192} ${PORT_EXT_K1:-9194}                9194            ${HOST_K1}
+# 2       9292                9294            ${HOST_K2}
+# 3       9392                9394            ${HOST_K3}
+#
+# Inside  9092                9094 (This isn't exposed to the outside world)
+
+# First Kafka 
+version: "3.8"
+services:
+  image: bitnami:kafka:3.7
+  environment:
+    # Specific to this node
+    - KAFKA_CFG_NODE_ID=1
+    # Generic to all
+    - KAFKA_CFG_PROCESS_ROLES:controller,broker
+    - KAFKA_CFG_LISTENERS=CONTROLLER://:9093,EXTERNAL://0.0.0.0:9094
+    - KAFKA_CFG_ADVERTISED_LISTENERS=CONTROLLER://${HOST_K1}:${CONTROLLER_PORT_K1},EXTERNAL://${HOST_IP}:${EXTERNAL_PORT}
+    - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL,PLAINTEXT
+    - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=${NODE_ID_K1}@${HOST_IP_K1}:${CONTROLLER_PORT},${NODE_ID_K2}@${HOST_IP_K2}:${CONTROLLER_PORT},${NODE_ID_K3}@${HOST_IP_K3}:${CONTROLLER_PORT}
+    - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    - KAFKA_KRAFT_CLUSTER_ID=${ENVIRONMENT}_KAFKA_CLUSTER
+  ports:
+    - "${CONTROLLER_PORT}:9093"
+    - "${EXTERNAL_PORT}:9094"
+
+#   volumes:
+#    - kafka_data:/bitnami/kafka
+
+# volumes:
+#   kafka_data:
+#     driver: local
+#     driver_opts:
+#       type: none
