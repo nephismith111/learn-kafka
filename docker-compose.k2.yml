@@ -1,11 +1,11 @@
 #######
 # 3 Node Kafka Cluster - All three nodes need to know about each other for cluster stability in the event of a failure
-# Node    Controller Port     External Port   Host IP
-# 1       ${PORT_CTL_K1:-9192} ${PORT_EXT_K1:-9194}                9194            ${HOST_K1}
-# 2       9292                9294            ${HOST_K2}
-# 3       9392                9394            ${HOST_K3}
+# Node    Controller Port           External Port           Host IP
+# 1       ${PORT_CTL_K1:-9192}      ${PORT_EXT_K1:-9194}    ${HOST_K1}
+# 2       ${PORT_CTL_K2:-9292}      ${PORT_EXT_K2:-9294}    ${HOST_K2}
+# 3       ${PORT_CTL_K3:-9392}      ${PORT_EXT_K3:-9394}    ${HOST_K3}
 #
-# Inside  9092                9094 (This isn't exposed to the outside world)
+# Inside  9092                      9094 (This isn't exposed to the outside world)
 
 # First Kafka 
 version: "3.8"
