@@ -12,6 +12,8 @@ version: "3.8"
 services:
   kafka2:
     image: bitnami/kafka:3.7
+    env_file:
+      - .env.k2
     environment:
       # Specific to this node
       - KAFKA_CFG_NODE_ID=${NODE_ID_K2:-2}
