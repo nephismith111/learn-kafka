@@ -5,7 +5,13 @@
 # 2       ${NODE_ID_K2:-2}          ${PORT_CTL_K2:-9292}      ${PORT_EXT_K2:-9294}    ${HOST_K2}
 # 3       ${NODE_ID_K3:-3}          ${PORT_CTL_K3:-9392}      ${PORT_EXT_K3:-9394}    ${HOST_K3}
 #
-# Inside  9092                      9094 (This isn't exposed to the outside world)
+# Inside  9092, 9093, 9094 (These aren't exposed to the outside world)
+#
+## Setup
+# docker node update --label-add docker-server-1=true node1
+# docker node update --label-add docker-server-2=true node2
+# docker node update --label-add docker-server-3=true node3
+##
 #################
 # Kafka Node 3
 #################
@@ -30,11 +36,12 @@ services:
     ports:
       - "${PORT_CTL_K3:-9393}:9093"
       - "${PORT_EXT_K3:-9394}:9094"
-#   volumes:
-#    - kafka_data:/bitnami/kafka
+    deployment:
+      placement:
+         constraints:
+           - node.label.docker-server-3 == true
+  volumes:
+    - kafka-data-3:/bitnami/kafka
 
-# volumes:
-#   kafka_data:
-#     driver: local
-#     driver_opts:
-#       type: none
+volumes:
+  kafka-data-3:
