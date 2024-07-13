@@ -6,9 +6,8 @@
 # 3       ${NODE_ID_K3:-3}          ${PORT_CTL_K3:-9392}      ${PORT_EXT_K3:-9394}    ${HOST_K3}
 #
 # Inside  9092                      9094 (This isn't exposed to the outside world)
-#################
+
 # Kafka Node 3
-#################
 version: "3.8"
 services:
   kafka3:
