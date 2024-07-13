@@ -30,7 +30,7 @@ services:
       #     url: "http://connect:8083"
 
     ports:
-      - 8001:8080
+      - ${PORT_AKHQ:-8000}:8080
     # links:
     #   - kafka
     #   - schema-registry
