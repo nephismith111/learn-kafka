@@ -4,8 +4,7 @@ services:
   connect-1:
     image: confluentinc/cp-kafka-connect:${CONFLUENT_VERSION:-latest}
     restart: unless-stopped
-    depends_on:
-      - schema-registry
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
       timeout: 30s
@@ -40,8 +39,6 @@ services:
   connect-2:
     image: confluentinc/cp-kafka-connect:${CONFLUENT_VERSION:-latest}
     restart: unless-stopped
-    depends_on:
-      - schema-registry
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
       timeout: 30s

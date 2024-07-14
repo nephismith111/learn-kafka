@@ -38,13 +38,13 @@ services:
     ports:
       - "${PORT_CTL_K1:-9193}:9093"
       - "${PORT_EXT_K1:-9194}:9094"
-    deployment:
-      placement:
-         constraints:
-           - node.label.docker-server-1 == true
+    # deployment:
+    #   placement:
+    #      constraints:
+    #        - node.label.docker-server-1 == true
         
-  volumes:
-    - kafka-data-1:/bitnami/kafka
+    volumes:
+      - kafka-data-1:/bitnami/kafka
 
 volumes:
   kafka-data-1:
