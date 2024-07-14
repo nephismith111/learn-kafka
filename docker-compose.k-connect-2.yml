@@ -1,0 +1,74 @@
+version: '3.7'
+
+services:
+  connect-3:
+    image: confluentinc/cp-kafka-connect:${CONFLUENT_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: '${HOST_K1}:${PORT_EXT_K1},${HOST_K2}:${PORT_EXT_K2},${HOST_K3}:${PORT_EXT_K3}'
+      CONNECT_REST_PORT: '8083'
+      CONNECT_REST_LISTENERS: 'http://0.0.0.0:8083'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'connect-3'
+      CONNECT_OFFSET_STORAGE_PARTITIONS: '-1'
+      CONNECT_OFFSET_STORAGE_TOPIC: '__connect-offsets'
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: '-1'
+      CONNECT_CONFIG_STORAGE_TOPIC: '__connect-config'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: '-1'
+      CONNECT_STATUS_STORAGE_PARTITIONS: '-1'
+      CONNECT_STATUS_STORAGE_TOPIC: '__connect-status'
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: '-1'
+      CONNECT_GROUP_ID: 'kafka-connect-3'
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'true'
+      CONNECT_KEY_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8085'
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'true'
+      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8085'
+      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_PLUGIN_PATH: ' /usr/share/java/'
+    ports:
+      - ${PORT_CONN_3:-9103}:8083
+
+  connect-4:
+    image: confluentinc/cp-kafka-connect:${CONFLUENT_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: '${HOST_K1}:${PORT_EXT_K1},${HOST_K2}:${PORT_EXT_K2},${HOST_K3}:${PORT_EXT_K3}'
+      CONNECT_REST_PORT: '8083'
+      CONNECT_REST_LISTENERS: 'http://0.0.0.0:8083'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'connect-4'
+      CONNECT_OFFSET_STORAGE_PARTITIONS: '-1'
+      CONNECT_OFFSET_STORAGE_TOPIC: '__connect-offsets'
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: '-1'
+      CONNECT_CONFIG_STORAGE_TOPIC: '__connect-config'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: '-1'
+      CONNECT_STATUS_STORAGE_PARTITIONS: '-1'
+      CONNECT_STATUS_STORAGE_TOPIC: '__connect-status'
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: '-1'
+      CONNECT_GROUP_ID: 'kafka-connect-4'
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'true'
+      CONNECT_KEY_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8085'
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'true'
+      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8085'
+      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_PLUGIN_PATH: ' /usr/share/java/'
+    ports:
+      - ${PORT_CONN_4:-9104}:8083
