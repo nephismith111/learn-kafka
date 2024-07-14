@@ -22,12 +22,12 @@ services:
           connections:
             docker-kafka-server:
               properties:
-                bootstrap.servers: "${HOST_K1}:${PORT_EXT_K1},${HOST_K2}:${PORT_EXT_K2},${HOST_K3}:${PORT_EXT_K3}"
+                bootstrap.servers: "${HOST_K1}:${PORT_EXT_K1}"
               schema-registry:
                 url: "http://schema-registry:8085"
-      # connect:
-      #   - name: "connect"
-      #     url: "http://connect:8083"
+              connect:
+                - name: "connect-1"
+                  url: "http://${HOST_K1}:${PORT_CONN_1:-9101}"
 
     ports:
       - ${PORT_AKHQ:-8000}:8080
