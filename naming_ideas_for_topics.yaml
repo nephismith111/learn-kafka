@@ -1,0 +1,96 @@
+Naming ideas for topics:
+Patterns:
+    # Full pattern
+    - <event|command>.<version v[0-9]>.<department>.<sub-domain>.<sub department>.<state + status|desired state>
+    
+    - Example Events:
+        - event.v1.sales.order.create.started
+        - event.v1.sales.order.create.finished
+        - event.v1.warehouse.pick_ticket.create.started
+        - event.v1.warehouse.pick_ticket.create.failed
+        - event.v1.purchasing.purchase_order.create.started
+    
+    - Example Commands:
+        - command.v2.warehouse.pick_ticket.create
+    
+
+Status:
+    # State of a task
+    - started
+    - finished
+    - failed
+    # Standard Log levels
+    - debug 
+    - info
+    - warning
+    - error
+    - critical
+
+Desired State:
+    # Standard CRUD operations (less Read)
+    - create
+    - update
+    - delete
+    # idempotent desired states (like ansible)
+    - present (it is an update if state doesn't match)
+    - absent  (is a delete if present)
+    
+    # Process like state management
+    - start
+    - stop
+    - restart
+    - halt
+
+    Departments:
+        Sub Departments:
+            Entities:
+
+departments: 
+    Corporate:
+        Productivity Reports
+        Profitability Reports
+        System Alerts
+        Sensitive usage alerts
+    Accounting:
+        customer_management
+            customer
+            contact 
+            address
+        accounts_receivable
+            Payment
+            Invoice
+        accounts_payable
+    Marketing:
+    Purchasing:
+        Managerial Approval (thresholds)
+        Purchase Order
+
+    Returns:
+      Authorization
+    Data Support:
+    Inventory:
+        supplier_pricing
+        customer_pricing
+        production_order
+        classification
+        item_search
+
+    IT Software:
+        infrastructure alert
+        Hardware
+        Software
+            Database
+    Finance:
+        Taxes
+        Report
+    Sales:
+        Order
+        Order stuck in the system
+        
+    Warehouse:
+        Pick Tickets
+        Shipping
+        Transfers
+        Put away
+        Cycle Counts
+
