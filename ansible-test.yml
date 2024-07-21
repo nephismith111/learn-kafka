@@ -1,6 +1,0 @@
----
-- hosts: localhost
-  tasks:
-    - name: Test debug
-      ansible.builtin.debug:
-        msg: "This is a test"

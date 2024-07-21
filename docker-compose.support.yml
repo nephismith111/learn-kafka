@@ -1,0 +1,165 @@
+# Kafka Stack Port Allocation
+# ----------------------------
+# GUI accessibility: AKHQ on 9000 for easy access
+# Consistency: Predictable patterns for scalable services
+# Simplicity: Round numbers (9x00) for primary services
+# Scalability: Room for growth within patterns
+# Criticality: Memorable ports for critical services
+#
+# Services:
+# ---------
+# AKHQ (GUI):           40000, 40001     # Main, Monitoring
+# Kafka Brokers:        40100 - 40199    # Up to 9 brokers
+#   - Per broker:       401x0, 401x1, 401x2  # Main, Control, Monitoring
+#   - Examples:         40100-40102, 40110-40112, 40120-40122
+# Kafka Connect:        40200 - 40299    # Up to 9 workers
+#   - Per worker:       402x0, 402x1     # Main, Monitoring
+#   - Examples:         40200-40201, 40210-40211, 40220-40221
+# Schema Registry:      40300 (nginx HA), 40310, 40320     # Main, Monitoring (+1)
+# ksqlDB:               40400, 40401     # Main, Monitoring
+# Kafka REST Proxy:     40500, 40501     # Main, Monitoring
+#
+# Notes:
+# - Port range 40000-40999 reserved for Kafka stack
+# - Monitoring ports are always main port + 1
+# - Kafka brokers use 3 consecutive ports
+# - Scalable services follow pattern for easy expansion
+
+version: '3.7'
+
+services:
+  # Inspecting tools
+  akhq:
+    # build:
+    #   context: .
+    image: tchiotludo/akhq
+    restart: unless-stopped
+    depends_on:
+      - ksqldb
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "${HOST_K1}:${PORT_EXT_K1},${HOST_K2}:${PORT_EXT_K2},${HOST_K3}:${PORT_EXT_K3},${HOST_K4}:${PORT_EXT_K4},${HOST_K5}:${PORT_EXT_K5}"
+              schema-registry:
+                url: "http://haproxy:80"
+              connect:
+                # First config (Host 1)
+                - name: "connect11"
+                  url: "http://${HOST_K1}:${PORT_CONN_11}"
+                - name: "connect12"
+                  url: "http://${HOST_K1}:${PORT_CONN_12}"
+                # Second config (Host 2)
+                - name: "connect21"
+                  url: "http://${HOST_K2}:${PORT_CONN_21}"
+                - name: "connect22"
+                  url: "http://${HOST_K2}:${PORT_CONN_22}"
+              ksqldb:
+                - name: "ksqldb"
+                  url: "http://${HOST_K1}:${PORT_KSQLDB}"
+    ports:
+      - ${PORT_AKHQ}:8080
+      - ${PORT_AKHQ_METRICS}:28081  # /metrics or /prometheus
+
+  ksqldb:
+    image: confluentinc/cp-ksqldb-server:${CONFLUENT_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - haproxy
+    ports:
+      - ${PORT_KSQLDB}:8088
+    environment:
+      KSQL_BOOTSTRAP_SERVERS: '${HOST_K1}:${PORT_EXT_K1},${HOST_K2}:${PORT_EXT_K2},${HOST_K3}:${PORT_EXT_K3},${HOST_K4}:${PORT_EXT_K4},${HOST_K5}:${PORT_EXT_K5}'
+      KSQL_LISTENERS: 'http://0.0.0.0:8088'
+      KSQL_KSQL_SERVICE_ID: 'ksql'
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://haproxy:80'
+      KSQL_KSQL_CONNECT_URL: "http://${HOST_K1}:${PORT_CONN_11}"
+      KSQL_KSQL_SINK_PARTITIONS: '1'
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: '1'
+    deploy:
+      placement:
+        constraints:
+          - node.labels.docker-server-1 == true
+
+  restapi:
+    image: confluentinc/cp-kafka-rest:${CONFLUENT_VERSION:-latest}
+    depends_on:
+      - haproxy
+    ports:
+      - ${PORT_RESTAPI}:8082
+    environment:
+      KAFKA_REST_HOST_NAME: restapi
+      KAFKA_REST_BOOTSTRAP_SERVERS: '${HOST_K1}:${PORT_EXT_K1},${HOST_K2}:${PORT_EXT_K2},${HOST_K3}:${PORT_EXT_K3},${HOST_K4}:${PORT_EXT_K4},${HOST_K5}:${PORT_EXT_K5}'
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://haproxy:80'
+    deploy:
+      placement:
+        constraints:
+          - node.labels.docker-server-1 == true
+
+  haproxy:
+    image: haproxy:latest
+    restart: unless-stopped
+    ports:
+      - ${PORT_SCHEMA}:80
+      - ${PORT_CONN}:85
+    deploy:
+      replicas: 2
+    environment:
+      # Environment variables for kafka schema registry
+      - HOST_K1=${HOST_K1}
+      - PORT_SCHEMA1=${PORT_SCHEMA1}
+      - HOST_K2=${HOST_K2}
+      - PORT_SCHEMA2=${PORT_SCHEMA2}
+      - HOST_K3=${HOST_K3}
+      - PORT_SCHEMA3=${PORT_SCHEMA3}
+      # Environment vars for kafka connect
+      - PORT_CONN_11=${PORT_CONN_11}
+      - PORT_CONN_12=${PORT_CONN_12}
+      - PORT_CONN_21=${PORT_CONN_21}
+      - PORT_CONN_22=${PORT_CONN_22}
+    command: |
+      sh -c "
+      cat > /tmp/haproxy.cfg << EOF
+      global
+        maxconn 4096
+  
+      defaults
+        mode http
+        timeout connect 5s
+        timeout client 50s
+        timeout server 50s
+  
+      frontend schema_registry_frontend
+        bind *:80
+        default_backend schema_registry_backend
+  
+      backend schema_registry_backend
+        balance roundrobin
+        option httpchk GET /
+        http-check expect status 200
+        server schema1 $${HOST_K1}:$${PORT_SCHEMA1} check inter 2s fall 3 rise 2
+        server schema2 $${HOST_K2}:$${PORT_SCHEMA2} check inter 2s fall 3 rise 2
+        server schema3 $${HOST_K3}:$${PORT_SCHEMA3} check inter 2s fall 3 rise 2
+
+      frontend kafka_connect_frontend
+        bind *:85
+        default_backend kafka_connect_backend
+
+      backend kafka_connect_backend
+        balance roundrobin
+        option httpchk GET /connectors
+        http-check expect status 200
+        server connect11 $${HOST_K1}:$${PORT_CONN_11} check inter 5s fall 3 rise 2
+        server connect12 $${HOST_K1}:$${PORT_CONN_12} check inter 5s fall 3 rise 2
+        server connect21 $${HOST_K2}:$${PORT_CONN_21} check inter 5s fall 3 rise 2
+        server connect22 $${HOST_K2}:$${PORT_CONN_22} check inter 5s fall 3 rise 2
+      EOF
+      haproxy -f /tmp/haproxy.cfg
+      "
+
+
+
+# kafka rest api

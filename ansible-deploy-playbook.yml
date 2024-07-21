@@ -1,0 +1,264 @@
+---
+# This playbook deploys a Docker stack using files and settings from a GitLab CI environment.
+# It assumes that all necessary variables are defined in the GitLab CI pipeline configuration.
+
+- name: Deploy Docker stack from GitLab CI
+  hosts: all
+  gather_facts: no
+  vars:
+    # Can skip these, they're set by gitlab
+    ci_registry: "{{ lookup('env', 'CI_REGISTRY') }}"
+    ci_project_namespace: "{{ lookup('env', 'CI_PROJECT_NAMESPACE') }}"
+    ci_commit_tag: "{{ lookup('env', 'CI_COMMIT_TAG') }}"
+
+    # Docker registry and GitLab CI configuration
+    docker_username: "{{ lookup('env', 'DOCKER_USERNAME') }}"   # *ci/cd var
+    docker_password: "{{ lookup('env', 'DOCKER_PASSWORD') }}"   # *ci/cd var
+    site_env: "{{ lookup('env', 'ENVIRONMENT') }}"              # *ci/cd var
+    vault_role_id: "{{ lookup('env', 'VAULT_ROLE_ID') }}"       # *ci/cd var
+    vault_secret_id: "{{ lookup('env', 'VAULT_SECRET_ID') }}"   # *ci/cd var
+    vault_addr: "{{ lookup('env', 'VAULT_ADDR') }}"   # *ci/cd var
+
+    telemetric_host: "{{ lookup('env', 'TELEMETRIC_HOST') }}"   # *ci/cd var
+
+
+    # Hard code these at the top of the ci/cd
+    site_name: "{{ lookup('env', 'SITE_NAME') }}"               # hard coded
+    deploy_file_name: "{{ lookup('env', 'DEPLOY_FILE_NAME') }}" # hard coded
+
+    # Job Specific
+    environment_role: "{{ lookup('env', 'ENVIRONMENT_ROLE') }}"   # job specific
+    stack_name: "{{ lookup('env', 'STACK_NAME') }}"               # job specific
+    deployment_type: "{{ lookup('env', 'DEPLOYMENT_TYPE') }}"     # job specific
+    release_channel: "{{ lookup('env', 'RELEASE_CHANNEL') }}"     # job specific
+
+    # Put all env variables here
+
+    # Environment
+    environment: "{{ lookup('env', 'ENVIRONMENT') }}"
+
+    # AKHQ
+    port_akhq: "{{ lookup('env', 'PORT_AKHQ') }}"
+    port_akhq_metrics: "{{ lookup('env', 'PORT_AKHQ_METRICS') }}"
+
+    # Kafka Brokers
+    node_id_k1: "{{ lookup('env', 'NODE_ID_K1') }}"
+    node_id_k2: "{{ lookup('env', 'NODE_ID_K2') }}"
+    node_id_k3: "{{ lookup('env', 'NODE_ID_K3') }}"
+    node_id_k4: "{{ lookup('env', 'NODE_ID_K4') }}"
+    node_id_k5: "{{ lookup('env', 'NODE_ID_K5') }}"
+
+    host_k1: "{{ lookup('env', 'HOST_K1') }}"
+    host_k2: "{{ lookup('env', 'HOST_K2') }}"
+    host_k3: "{{ lookup('env', 'HOST_K3') }}"
+    host_k4: "{{ lookup('env', 'HOST_K4') }}"
+    host_k5: "{{ lookup('env', 'HOST_K5') }}"
+
+    port_ext_k1: "{{ lookup('env', 'PORT_EXT_K1') }}"
+    port_ctl_k1: "{{ lookup('env', 'PORT_CTL_K1') }}"
+    port_plain_k1: "{{ lookup('env', 'PORT_PLAIN_K1') }}"
+    port_metrics_k1: "{{ lookup('env', 'PORT_METRICS_K1') }}"
+
+    port_ext_k2: "{{ lookup('env', 'PORT_EXT_K2') }}"
+    port_ctl_k2: "{{ lookup('env', 'PORT_CTL_K2') }}"
+    port_plain_k2: "{{ lookup('env', 'PORT_PLAIN_K2') }}"
+    port_metrics_k2: "{{ lookup('env', 'PORT_METRICS_K2') }}"
+
+    port_ext_k3: "{{ lookup('env', 'PORT_EXT_K3') }}"
+    port_ctl_k3: "{{ lookup('env', 'PORT_CTL_K3') }}"
+    port_plain_k3: "{{ lookup('env', 'PORT_PLAIN_K3') }}"
+    port_metrics_k3: "{{ lookup('env', 'PORT_METRICS_K3') }}"
+
+    port_ext_k4: "{{ lookup('env', 'PORT_EXT_K4') }}"
+    port_ctl_k4: "{{ lookup('env', 'PORT_CTL_K4') }}"
+    port_plain_k4: "{{ lookup('env', 'PORT_PLAIN_K4') }}"
+    port_metrics_k4: "{{ lookup('env', 'PORT_METRICS_K4') }}"
+
+    port_ext_k5: "{{ lookup('env', 'PORT_EXT_K5') }}"
+    port_ctl_k5: "{{ lookup('env', 'PORT_CTL_K5') }}"
+    port_plain_k5: "{{ lookup('env', 'PORT_PLAIN_K5') }}"
+    port_metrics_k5: "{{ lookup('env', 'PORT_METRICS_K5') }}"
+
+    # Kafka Connect
+    port_conn: "{{ lookup('env', 'PORT_CONN') }}"
+    port_conn_11: "{{ lookup('env', 'PORT_CONN_11') }}"
+    port_conn_12: "{{ lookup('env', 'PORT_CONN_12') }}"
+    port_conn_21: "{{ lookup('env', 'PORT_CONN_21') }}"
+    port_conn_22: "{{ lookup('env', 'PORT_CONN_22') }}"
+
+    # Schema Registry
+    port_schema: "{{ lookup('env', 'PORT_SCHEMA') }}"
+    port_schema1: "{{ lookup('env', 'PORT_SCHEMA1') }}"
+    port_schema2: "{{ lookup('env', 'PORT_SCHEMA2') }}"
+    port_schema3: "{{ lookup('env', 'PORT_SCHEMA3') }}"
+
+    # ksqlDB
+    port_ksqldb: "{{ lookup('env', 'PORT_KSQLDB') }}"
+
+    # Rest API
+    port_restapi: "{{ lookup('env', 'PORT_RESTAPI') }}"
+
+    # Confluent Version
+    confluent_version: "{{ lookup('env', 'CONFLUENT_VERSION') }}"
+
+    # Kafka Connect Topics
+    connect_offset_storage_topic: "{{ lookup('env', 'CONNECT_OFFSET_STORAGE_TOPIC') }}"
+    connect_config_storage_topic: "{{ lookup('env', 'CONNECT_CONFIG_STORAGE_TOPIC') }}"
+    connect_status_storage_topic: "{{ lookup('env', 'CONNECT_STATUS_STORAGE_TOPIC') }}"
+
+    # Kafka Connect Group ID
+    connect_group_id: "{{ lookup('env', 'CONNECT_GROUP_ID') }}"
+
+    # New variable to control which components to deploy
+    deploy_components: "{{ lookup('env', 'DEPLOY_COMPONENTS') | default('all', true) }}"
+
+  tasks:
+    - name: Ensure /srv/{{ site_name }} directory and docker-compose files are properly set up
+      block:
+        - name: Check if /srv/{{ site_name }} directory exists
+          ansible.builtin.stat:
+            path: /srv/{{ site_name }}
+          register: site_directory
+
+        - name: Ensure /srv/{{ site_name }} directory exists
+          ansible.builtin.file:
+            path: /srv/{{ site_name }}
+            state: directory
+            owner: gitlab
+            group: docker
+            mode: '2775'
+          when: not site_directory.stat.exists
+
+        - name: Copy over the docker-compose files
+          ansible.builtin.copy:
+            src: "{{ item }}"
+            dest: "/srv/{{ site_name }}/{{ item }}"
+            force: yes
+            owner: gitlab
+            group: docker
+            mode: '0664'
+          loop:
+            - docker-compose.b1.yml
+            - docker-compose.b2.yml
+            - docker-compose.b3.yml
+            - docker-compose.b4.yml
+            - docker-compose.b5.yml
+            - docker-compose.connect1.yml
+            - docker-compose.connect2.yml
+            - docker-compose.support.yml
+    - name: Login to GitLab Docker Registry
+      docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+        registry: "{{ ci_registry }}"
+
+    - name: Deploy Docker stacks
+      docker_stack:
+        state: present
+        name: "{{ item.stack_name }}"
+        with_registry_auth: true
+        compose:
+          - "/srv/{{ site_name }}/{{ item.compose_file }}"
+      environment:
+        # Environment
+        ENVIRONMENT: "{{ site_env }}"
+        ENVIRONMENT_ROLE: "{{ environment_role }}"
+        STACK_NAME: "{{ item.stack_name }}"
+        DEPLOYMENT_TYPE: "{{ deployment_type }}"
+        RELEASE_CHANNEL: "{{ release_channel }}"
+        RELEASE_VERSION: "{{ ci_commit_tag }}"
+
+        # Vault and Telemetry
+        VAULT_ROLE_ID: "{{ vault_role_id }}"
+        VAULT_SECRET_ID: "{{ vault_secret_id }}"
+        VAULT_ADDR: "{{ vault_addr }}"
+        TELEMETRIC_HOST: "{{ telemetric_host }}"
+
+        # Site and CI/CD
+        SITE_NAME: "{{ site_name }}"
+        CI_COMMIT_TAG: "{{ ci_commit_tag }}"
+        CI_PROJECT_NAMESPACE: "{{ ci_project_namespace }}"
+
+
+        # AKHQ
+        PORT_AKHQ: "{{ port_akhq }}"
+        PORT_AKHQ_METRICS: "{{ port_akhq_metrics }}"
+
+        # Kafka Brokers
+        NODE_ID_K1: "{{ node_id_k1 }}"
+        NODE_ID_K2: "{{ node_id_k2 }}"
+        NODE_ID_K3: "{{ node_id_k3 }}"
+        NODE_ID_K4: "{{ node_id_k4 }}"
+        NODE_ID_K5: "{{ node_id_k5 }}"
+        HOST_K1: "{{ host_k1 }}"
+        HOST_K2: "{{ host_k2 }}"
+        HOST_K3: "{{ host_k3 }}"
+        HOST_K4: "{{ host_k4 }}"
+        HOST_K5: "{{ host_k5 }}"
+
+        PORT_EXT_K1: "{{ port_ext_k1 }}"
+        PORT_CTL_K1: "{{ port_ctl_k1 }}"
+        PORT_PLAIN_K1: "{{ port_plain_k1 }}"
+        PORT_METRICS_K1: "{{ port_metrics_k1 }}"
+
+        PORT_EXT_K2: "{{ port_ext_k2 }}"
+        PORT_CTL_K2: "{{ port_ctl_k2 }}"
+        PORT_PLAIN_K2: "{{ port_plain_k2 }}"
+        PORT_METRICS_K2: "{{ port_metrics_k2 }}"
+
+        PORT_EXT_K3: "{{ port_ext_k3 }}"
+        PORT_CTL_K3: "{{ port_ctl_k3 }}"
+        PORT_PLAIN_K3: "{{ port_plain_k3 }}"
+        PORT_METRICS_K3: "{{ port_metrics_k3 }}"
+
+        PORT_EXT_K4: "{{ port_ext_k4 }}"
+        PORT_CTL_K4: "{{ port_ctl_k4 }}"
+        PORT_PLAIN_K4: "{{ port_plain_k4 }}"
+        PORT_METRICS_K4: "{{ port_metrics_k4 }}"
+
+        PORT_EXT_K5: "{{ port_ext_k5 }}"
+        PORT_CTL_K5: "{{ port_ctl_k5 }}"
+        PORT_PLAIN_K5: "{{ port_plain_k5 }}"
+        PORT_METRICS_K5: "{{ port_metrics_k5 }}"
+
+        # Kafka Connect
+        PORT_CONN: "{{ port_conn }}"
+        PORT_CONN_11: "{{ port_conn_11 }}"
+        PORT_CONN_12: "{{ port_conn_12 }}"
+        PORT_CONN_21: "{{ port_conn_21 }}"
+        PORT_CONN_22: "{{ port_conn_22 }}"
+
+        # Schema Registry
+        PORT_SCHEMA: "{{ port_schema }}"
+        PORT_SCHEMA1: "{{ port_schema1 }}"
+        PORT_SCHEMA2: "{{ port_schema2 }}"
+        PORT_SCHEMA3: "{{ port_schema3 }}"
+
+        # ksqlDB
+        PORT_KSQLDB: "{{ port_ksqldb }}"
+
+        # Rest API
+        PORT_RESTAPI: "{{ port_restapi }}"
+
+        # Confluent Version
+        CONFLUENT_VERSION: "{{ confluent_version }}"
+
+        # Kafka Connect Topics
+        CONNECT_OFFSET_STORAGE_TOPIC: "{{ connect_offset_storage_topic }}"
+        CONNECT_CONFIG_STORAGE_TOPIC: "{{ connect_config_storage_topic }}"
+        CONNECT_STATUS_STORAGE_TOPIC: "{{ connect_status_storage_topic }}"
+
+        # Kafka Connect Group ID
+        CONNECT_GROUP_ID: "{{ connect_group_id }}"
+      loop: "{{ docker_stacks | selectattr('deploy', 'equalto', true) | list }}"
+      vars:
+        docker_stacks:
+          - { stack_name: "ks_b1", compose_file: "docker-compose.b1.yml", deploy: "{{ 'b1' in deploy_components }}" }
+          - { stack_name: "ks_b2", compose_file: "docker-compose.b2.yml", deploy: "{{ 'b2' in deploy_components }}" }
+          - { stack_name: "ks_b3", compose_file: "docker-compose.b3.yml", deploy: "{{ 'b3' in deploy_components }}" }
+          - { stack_name: "ks_b4", compose_file: "docker-compose.b4.yml", deploy: "{{ 'b4' in deploy_components }}" }
+          - { stack_name: "ks_b5", compose_file: "docker-compose.b5.yml", deploy: "{{ 'b5' in deploy_components }}" }
+          - { stack_name: "ks_connect1", compose_file: "docker-compose.connect1.yml", deploy: "{{ 'connect1' in deploy_components }}" }
+          - { stack_name: "ks_connect2", compose_file: "docker-compose.connect2.yml", deploy: "{{ 'connect2' in deploy_components }}" }
+          - { stack_name: "ks_support", compose_file: "docker-compose.support.yml", deploy: "{{ 'support' in deploy_components }}" }
+

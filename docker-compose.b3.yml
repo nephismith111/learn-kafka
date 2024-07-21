@@ -1,0 +1,84 @@
+
+## Setup
+# docker node update --label-add docker-server-1=true NLinux19
+# docker node update --label-add docker-server-2=true NLinux19
+# docker node update --label-add docker-server-3=true NLinux19
+##
+#################
+# Kafka Node 3
+#################
+version: "3.8"
+services:
+  broker3:
+    image: bitnami/kafka:3.7
+    environment:
+      # Specific to this node
+      - KAFKA_CFG_NODE_ID=${NODE_ID_K3}
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://${HOST_K3}:${PORT_PLAIN_K3},EXTERNAL://${HOST_K3}:${PORT_EXT_K3}
+
+      # Generic to all
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://0.0.0.0:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=${NODE_ID_K1}@${HOST_K1}:${PORT_CTL_K1},${NODE_ID_K2}@${HOST_K2}:${PORT_CTL_K2},${NODE_ID_K3}@${HOST_K3}:${PORT_CTL_K3},${NODE_ID_K4}@${HOST_K4}:${PORT_CTL_K4},${NODE_ID_K5}@${HOST_K5}:${PORT_CTL_K5}
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_KRAFT_CLUSTER_ID=${ENVIRONMENT}_KAFKA_CLUSTER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=EXTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=3
+
+    ports:
+      - "${PORT_PLAIN_K3}:9092"
+      - "${PORT_CTL_K3}:9093"
+      - "${PORT_EXT_K3}:9094"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.docker-server-3 == true
+      resources:
+        limits:
+          memory: 10G
+#    healthcheck:
+#      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9094 --list"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+#      start_period: 30s
+    volumes:
+      - kafka-data-3:/bitnami/kafka
+
+  schema3:
+    image: confluentinc/cp-schema-registry:${CONFLUENT_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - broker3
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://${HOST_K1}:${PORT_EXT_K1},PLAINTEXT://${HOST_K2}:${PORT_EXT_K2},PLAINTEXT://${HOST_K3}:${PORT_EXT_K3}'
+      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry-3'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8085'
+      SCHEMA_REGISTRY_ADVERTISED_LISTENERS: 'http://${HOST_K3}:${PORT_SCHEMA3}'
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: '_schemas'
+      SCHEMA_REGISTRY_GROUP_ID: 'schema-registry-cluster'
+      SCHEMA_REGISTRY_MASTER_ELIGIBILITY: 'true'
+
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: '3'
+      SCHEMA_REGISTRY_KAFKASTORE_TIMEOUT_MS: '15000'
+      SCHEMA_REGISTRY_KAFKASTORE_INIT_TIMEOUT_MS: '60000'
+    ports:
+     - ${PORT_SCHEMA3}:8085
+    deploy:
+      placement:
+        constraints:
+          - node.labels.docker-server-3 == true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://0.0.0.0:8085/subjects || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+
+
+volumes:
+  kafka-data-3:

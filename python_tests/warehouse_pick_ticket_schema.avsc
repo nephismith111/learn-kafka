@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "WarehousePickTicketEvent",
+  "fields": [
+    {"name": "event_id", "type": "string"},
+    {"name": "timestamp", "type": "long"},
+    {"name": "pick_ticket_id", "type": "string"},
+    {"name": "warehouse_id", "type": "string"},
+    {"name": "status", "type": "string"}
+  ]
+}

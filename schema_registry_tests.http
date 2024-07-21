@@ -1,0 +1,85 @@
+### Schema Registry Tests
+
+# This file contains HTTP requests to test the Schema Registry endpoints
+# including individual instances and the Nginx load-balanced endpoint.
+
+### Test Schema Registry 1 (PORT_SCHEMA1: 40310)
+
+# Get list of subjects
+GET http://localhost:40310/subjects
+
+### Get schema for a specific subject (replace 'your-subject-name' with an actual subject)
+GET http://localhost:40310/subjects/your-subject-name/versions/latest
+
+### Check compatibility of a schema (replace 'your-subject-name' and provide a valid Avro schema)
+POST http://localhost:40310/compatibility/subjects/your-subject-name/versions/latest
+Content-Type: application/vnd.schemaregistry.v1+json
+
+{
+  "schema": "{\"type\":\"record\",\"name\":\"test\",\"fields\":[{\"name\":\"field1\",\"type\":\"string\"}]}"
+}
+
+### Test Schema Registry 2 (PORT_SCHEMA2: 40320)
+
+# Get list of subjects
+GET http://localhost:40320/subjects
+
+### Get schema for a specific subject (replace 'your-subject-name' with an actual subject)
+GET http://localhost:40320/subjects/your-subject-name/versions/latest
+
+### Check compatibility of a schema (replace 'your-subject-name' and provide a valid Avro schema)
+POST http://localhost:40320/compatibility/subjects/your-subject-name/versions/latest
+Content-Type: application/vnd.schemaregistry.v1+json
+
+{
+  "schema": "{\"type\":\"record\",\"name\":\"test\",\"fields\":[{\"name\":\"field1\",\"type\":\"string\"}]}"
+}
+
+### Test Schema Registry 3 (PORT_SCHEMA3: 40330)
+
+# Get list of subjects
+GET http://localhost:40330/subjects
+
+### Get schema for a specific subject (replace 'your-subject-name' with an actual subject)
+GET http://localhost:40330/subjects/your-subject-name/versions/latest
+
+### Check compatibility of a schema (replace 'your-subject-name' and provide a valid Avro schema)
+POST http://localhost:40330/compatibility/subjects/your-subject-name/versions/latest
+Content-Type: application/vnd.schemaregistry.v1+json
+
+{
+  "schema": "{\"type\":\"record\",\"name\":\"test\",\"fields\":[{\"name\":\"field1\",\"type\":\"string\"}]}"
+}
+
+### Test Nginx Load-Balanced Endpoint (PORT_SCHEMA: 40300)
+
+# Get list of subjects
+GET http://localhost:40300/subjects
+
+### Get schema for a specific subject (replace 'your-subject-name' with an actual subject)
+GET http://localhost:40300/subjects/your-subject-name/versions/latest
+
+### Check compatibility of a schema (replace 'your-subject-name' and provide a valid Avro schema)
+POST http://localhost:40300/compatibility/subjects/your-subject-name/versions/latest
+Content-Type: application/vnd.schemaregistry.v1+json
+
+{
+  "schema": "{\"type\":\"record\",\"name\":\"test\",\"fields\":[{\"name\":\"field1\",\"type\":\"string\"}]}"
+}
+
+### Additional useful endpoints
+
+### Get Schema Registry config (Nginx endpoint)
+GET http://localhost:40300/config
+
+### Get Schema Registry status (Nginx endpoint)
+GET http://localhost:40300/
+
+### List all schema versions for a subject (Nginx endpoint)
+GET http://localhost:40300/subjects/your-subject-name/versions
+
+### Get a specific version of a schema (Nginx endpoint)
+GET http://localhost:40300/subjects/your-subject-name/versions/1
+
+# Note: Replace 'your-subject-name' with an actual subject name in your Schema Registry
+# You may need to create subjects and register schemas before some of these endpoints will return meaningful results
