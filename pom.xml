@@ -34,12 +34,12 @@
                         <param>output-schemas</param>
                     </outputDirectory>
                     <subjects>
-                        <event-warehouse-pick_ticket-create-completed-value>topics_terraform/schemas/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
-                        <event-warehouse-pick_ticket-create-started-value>topics_terraform/schemas/event-warehouse-pick_ticket-create-started.json</event-warehouse-pick_ticket-create-started-value>
+                        <evt-warehouse-pick_ticket-create-completed-value>topics_terraform/schemas/evt-warehouse-pick_ticket-create-completed.json</evt-warehouse-pick_ticket-create-completed-value>
+                        <evt-warehouse-pick_ticket-create-started-value>topics_terraform/schemas/evt-warehouse-pick_ticket-create-started.json</evt-warehouse-pick_ticket-create-started-value>
                     </subjects>
                     <schemaTypes>
-                        <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
-                        <event-warehouse-pick_ticket-create-started-value>JSON</event-warehouse-pick_ticket-create-started-value>
+                        <evt-warehouse-pick_ticket-create-completed-value>JSON</evt-warehouse-pick_ticket-create-completed-value>
+                        <evt-warehouse-pick_ticket-create-started-value>JSON</evt-warehouse-pick_ticket-create-started-value>
                     </schemaTypes>
                 </configuration>
                 <goals>
