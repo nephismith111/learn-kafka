@@ -44,9 +44,11 @@
                             <subjects>
                                 <Orders-value>src/main/resources/order.avsc</Orders-value>
                                 <Flights-value>src/main/resources/flight.proto</Flights-value>
+                                <event-v1-warehouse-pick-value>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick-value>
                             </subjects>
                             <schemaTypes>
                                 <Flights-value>PROTOBUF</Flights-value>
+                                <event-v1-warehouse-pick-value>JSON</event-v1-warehouse-pick-value>
                             </schemaTypes>
 
                         </configuration>
@@ -62,6 +64,7 @@
                             <compatibilityLevels>
                                 <Orders-value>FORWARD_TRANSITIVE</Orders-value>
                                 <Flights-value>FORWARD_TRANSITIVE</Flights-value>
+                                <event-v1-warehouse-pick-value>FORWARD_TRANSITIVE</event-v1-warehouse-pick-value>
                             </compatibilityLevels>
                         </configuration>
                     </execution>
@@ -77,17 +80,21 @@
                             <schemas>
                                 <order>src/main/resources/order.avsc</order>
                                 <flight>src/main/resources/flight.proto</flight>
+                                <event-v1-warehouse-pick>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick>
                             </schemas>
                             <schemaTypes>
                                 <flight>ProtoBuf</flight>
+                                <event-v1-warehouse-pick>JSON</event-v1-warehouse-pick>
                             </schemaTypes>
                             <previousSchemaPaths>
                                 <flight>src/main/resources/flightSchemas</flight>
                                 <order>src/main/resources/orderSchemas</order>
+                                <event-v1-warehouse-pick>src/main/resources/warehousePickSchemas</event-v1-warehouse-pick>
                             </previousSchemaPaths>
                             <compatibilityLevels>
                                 <order>FORWARD_TRANSITIVE</order>
                                 <flight>FORWARD_TRANSITIVE</flight>
+                                <event-v1-warehouse-pick>FORWARD_TRANSITIVE</event-v1-warehouse-pick>
                             </compatibilityLevels>
                         </configuration>
                     </execution>
@@ -102,9 +109,11 @@
                             <subjects>
                                 <Orders-value>src/main/resources/order.avsc</Orders-value>
                                 <Flights-value>src/main/resources/flight.proto</Flights-value>
+                                <event-v1-warehouse-pick-value>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick-value>
                             </subjects>
                             <schemaTypes>
                                 <Flights-value>PROTOBUF</Flights-value>
+                                <event-v1-warehouse-pick-value>JSON</event-v1-warehouse-pick-value>
                             </schemaTypes>
                         </configuration>
                     </execution>
@@ -118,9 +127,11 @@
                             <subjects>
                                 <Orders-value>src/main/resources/order.avsc</Orders-value>
                                 <Flights-value>src/main/resources/flight.proto</Flights-value>
+                                <event-v1-warehouse-pick-value>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick-value>
                             </subjects>
                             <schemaTypes>
                                 <Flights-value>PROTOBUF</Flights-value>
+                                <event-v1-warehouse-pick-value>JSON</event-v1-warehouse-pick-value>
                             </schemaTypes>
                         </configuration>
                     </execution>
