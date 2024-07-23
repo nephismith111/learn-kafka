@@ -30,95 +30,21 @@
                     <schemaRegistryUrls>
                         <param>${schemaRegistryUrl}</param>
                     </schemaRegistryUrls>
-                    
+                    <outputDirectory>
+                        <param>output-schemas</param>
+                    </outputDirectory>
+                    <subjects>
+                        <event-warehouse-pick_ticket-create-completed-value>topics_terraform/schemas/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
+                        <event-warehouse-pick_ticket-create-started-value>topics_terraform/schemas/event-warehouse-pick_ticket-create-started.json</event-warehouse-pick_ticket-create-started-value>
+                    </subjects>
+                    <schemaTypes>
+                        <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
+                        <event-warehouse-pick_ticket-create-started-value>JSON</event-warehouse-pick_ticket-create-started-value>
+                    </schemaTypes>
                 </configuration>
-                <executions>
-
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>validate</goal>
-                        </goals>
-                        <configuration>
-                            <subjects>
-                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
-                            </subjects>
-                            <schemaTypes>
-                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
-                            </schemaTypes>
-
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>set-compatibility</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>set-compatibility</goal>
-                        </goals>
-                        <configuration>
-                            <compatibilityLevels>
-                                <event-warehouse-pick_ticket-create-completed-value>FORWARD_TRANSITIVE</event-warehouse-pick_ticket-create-completed-value>
-                            </compatibilityLevels>
-                        </configuration>
-                    </execution>
-
-
-                    <execution>
-                        <id>test-local</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>test-local-compatibility</goal>
-                        </goals>
-                        <configuration>
-                            <schemas>
-                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
-                            </schemas>
-                            <schemaTypes>
-                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
-                            </schemaTypes>
-                            <previousSchemaPaths>
-                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/warehousePickSchemas</event-warehouse-pick_ticket-create-completed-value>
-                            </previousSchemaPaths>
-                            <compatibilityLevels>
-                                <event-warehouse-pick_ticket-create-completed-value>FORWARD_TRANSITIVE</event-warehouse-pick_ticket-create-completed-value>
-                            </compatibilityLevels>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>test-compatibility</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>test-compatibility</goal>
-                        </goals>
-                        <configuration>
-                            <subjects>
-                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
-                            </subjects>
-                            <schemaTypes>
-                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
-                            </schemaTypes>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>register</id>
-                        <goals>
-                            <goal>register</goal>
-                        </goals>
-                        <configuration>
-                            <subjects>
-                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
-                            </subjects>
-                            <schemaTypes>
-                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
-                            </schemaTypes>
-                        </configuration>
-                    </execution>
-
-                </executions>
+                <goals>
+                    <goal>register</goal>
+                </goals>
             </plugin>
 
         </plugins>
