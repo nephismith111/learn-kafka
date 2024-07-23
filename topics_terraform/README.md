@@ -12,21 +12,21 @@ Topics are organized in files named `topics-<department>.tf`. For example, wareh
 
 ### Naming Patterns
 
-- Full pattern: `<event|command>.<version v[0-9]>.<department>.<sub-domain>.<sub department>.<state + status|desired state>`
+- Full pattern: `<evt|cmd>.<department>.<sub-domain>.<sub department>.<state + status|desired state>`
 
 #### Example Events:
-- event.v1.sales.order.create.started
-- event.v1.sales.order.create.finished
-- event.v1.warehouse.pick_ticket.create.started
-- event.v1.warehouse.pick_ticket.create.failed
-- event.v1.purchasing.purchase_order.create.started
+- evt-sales-order-create-started
+- evt-sales-order-create-finished
+- evt-warehouse-pick_ticket-create-started
+- evt-warehouse-pick_ticket-create-failed
+- evt-purchasing-purchase_order-create-started
 
 #### Example Commands:
-- command.v2.warehouse.pick_ticket.create
-- command.v1.sales.order.update
-- command.v1.inventory.item.delete
-- command.v3.purchasing.purchase_order.approve
-- command.v2.returns.authorization.create
+- cmd-warehouse-pick_ticket-create
+- cmd-sales-order-update
+- cmd-inventory-item-delete
+- cmd-purchasing-purchase_order-approve
+- cmd-returns-authorization-create
 
 
 ### Status:
@@ -43,14 +43,14 @@ Topics are organized in files named `topics-<department>.tf`. For example, wareh
 Here are two example topics from `topics-warehouse.tf`:
 
 ```hcl
-resource "kafka_topic" "event-v1-warehouse-pick_ticket-create-started" {
-    name                    = "event.v1.warehouse.pick_ticket.create.started"
+resource "kafka_topic" "evt-warehouse-pick_ticket-create-started" {
+    name                    = "evt-warehouse-pick_ticket-create-started"
     replication_factor      = 3
     partitions              = 15
 }
 
-resource "kafka_topic" "event-v1-warehouse-pick_ticket-create-failed" {
-    name                    = "event.v1.warehouse.pick_ticket.create.failed"
+resource "kafka_topic" "evt-warehouse-pick_ticket-create-failed" {
+    name                    = "evt-warehouse-pick_ticket-create-failed"
     replication_factor      = 3
     partitions              = 15
 }

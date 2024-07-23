@@ -1,8 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "event-warehouse-pick_ticket-create-started",
+    "title": "evt-warehouse-pick_ticket-create-started",
     "description": "Event notifying that a pick ticket has been started",
-    "version": "0.0.1",
     "type": "object",
     "properties": {
       "server": {
