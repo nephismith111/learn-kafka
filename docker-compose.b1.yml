@@ -10,6 +10,8 @@ version: "3.8"
 services:
   broker1:
     image: bitnami/kafka:3.7
+    networks:
+      - ks_schema_network
     environment:
       # Specific to this node
       - KAFKA_CFG_NODE_ID=${NODE_ID_K1}
@@ -52,6 +54,8 @@ services:
     restart: unless-stopped
     depends_on:
       - broker1
+    networks:
+      - ks_schema_network
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://${HOST_K1}:${PORT_EXT_K1},PLAINTEXT://${HOST_K2}:${PORT_EXT_K2},PLAINTEXT://${HOST_K3}:${PORT_EXT_K3}'
       SCHEMA_REGISTRY_HOST_NAME: 'http://${HOST_K1}:${PORT_SCHEMA1}'
@@ -80,6 +84,10 @@ services:
 
 volumes:
   kafka-data-1:
+
+networks:
+  ks_schema_network:
+    external: true
 #     driver: local
 #     driver_opts:
 #       type: none
