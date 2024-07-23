@@ -1,4 +1,5 @@
-
+## Note: This stack should be deployed with the name 'ks_b3' for proper Schema Registry hostname resolution.
+##
 ## Setup
 # docker node update --label-add docker-server-1=true NLinux19
 # docker node update --label-add docker-server-2=true NLinux19

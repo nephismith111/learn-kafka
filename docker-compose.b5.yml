@@ -1,3 +1,5 @@
+## Note: This stack should be deployed with the name 'ks_b5' for proper hostname resolution if Schema Registry is added in the future.
+##
 #######
 # 5 Node Kafka Cluster - All five nodes need to know about each other for cluster stability in the event of a failure
 # Node    Node ID                   Controller Port           External Port           Host IP

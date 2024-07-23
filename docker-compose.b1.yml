@@ -1,3 +1,5 @@
+## Note: This stack should be deployed with the name 'ks_b1' for proper Schema Registry hostname resolution.
+##
 ## Setup
 # docker node update --label-add docker-server-1=true ajftracerv
 # docker node update --label-add docker-server-2=true ajftracerv
