@@ -12,6 +12,21 @@
 ## Support Programs
 
 - **Terraform**: Allows for idempotent and version-controlled management of topics.
+- **Maven**: Used for managing and registering schemas with the Schema Registry.
+
+## Schema Management
+
+Schemas are managed using Maven and the Confluent Schema Registry Maven Plugin. To add or update schemas:
+
+1. Add your schema JSON files to the `topics_terraform/schemas` directory.
+2. Update the `pom.xml` file to include the new schemas in the `subjects` section.
+3. Run the following command to register the schemas with the Schema Registry:
+
+   ```
+   mvn schema-registry:register -e -X
+   ```
+
+Note: While schema validation is not currently enforced, it is recommended to extend the `pom.xml` file for offline schema validation in the future.
 
 ## Project Structure
 
