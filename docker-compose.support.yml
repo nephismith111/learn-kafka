@@ -121,6 +121,10 @@ services:
       - PORT_SCHEMA2=${PORT_SCHEMA2}
       - HOST_K3=${HOST_K3}
       - PORT_SCHEMA3=${PORT_SCHEMA3}
+      - HOST_K4=${HOST_K4}
+      - PORT_SCHEMA4=${PORT_SCHEMA4}
+      - HOST_K5=${HOST_K5}
+      - PORT_SCHEMA5=${PORT_SCHEMA5}
       # Environment vars for kafka connect
       - PORT_CONN_11=${PORT_CONN_11}
       - PORT_CONN_12=${PORT_CONN_12}
