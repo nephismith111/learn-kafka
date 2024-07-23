@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "event-warehouse-pick_ticket-create-started",
+    "description": "Event notifying that a pick ticket has been started",
+    "version": "0.0.1",
+    "type": "object",
+    "properties": {
+      "server": {
+        "type": "string"
+      },
+      "db": {
+        "type": "string"
+      },
+      "location_id": {
+        "type": "integer"
+      },
+      "order_no": {
+        "type": "integer"
+      }
+    },
+    "required": ["order_no", "location_id"],
+    "additionalProperties": true
+  }
