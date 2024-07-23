@@ -120,3 +120,14 @@ Todo list:
 * [x] Publish and subscribe to basic messages
 * [ ] Publish and subscribe using schema'd messages
 * [ ] Setup example using open telemetry for traces
+
+## Event Structure
+
+The event structure has been updated to remove versions and use the following naming conventions:
+- "event" is now "evt"
+- "command" is now "cmd"
+
+Example:
+- evt-warehouse-pick_ticket-create-started
+- evt-warehouse-pick_ticket-create-completed
+- cmd-warehouse-pick_ticket-create
