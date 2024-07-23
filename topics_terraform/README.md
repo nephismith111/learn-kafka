@@ -71,3 +71,26 @@ resource "kafka_topic" "evt-warehouse-pick_ticket-create-failed" {
 - Warehouse: Pick Tickets, Shipping, Transfers, Put away, Cycle Counts
 
 For more detailed information on departments and sub-departments, refer to the comments in the `main.tf` file.
+
+## *SEARCH/REPLACE block* Rules
+
+When proposing changes to files in this project, always use the *SEARCH/REPLACE block* format:
+
+1. File path on a single line, verbatim (no formatting or quotes).
+2. Opening fence and code language, e.g., <source>hcl
+3. Start of search block: <<<<<<< SEARCH
+4. Exact lines to search for in the existing code
+5. Dividing line: =======
+6. Lines to replace in the source code
+7. End of replace block: >>>>>>> REPLACE
+8. Closing fence: </source>
+
+### Important Notes:
+- The *SEARCH* section must exactly match the existing code, including comments and whitespace.
+- *SEARCH/REPLACE* blocks replace all matching occurrences.
+- Keep blocks concise, focusing on changing lines and minimal surrounding context.
+- Only create blocks for files explicitly added to the conversation.
+- To move code within a file, use two separate blocks: one to delete, one to insert.
+- For new files, use an empty *SEARCH* section and put the new content in the *REPLACE* section.
+
+Always use this format when proposing code changes to ensure clarity and prevent errors in file modifications.
