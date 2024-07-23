@@ -59,6 +59,39 @@ services:
     volumes:
       - kafka-data-4:/bitnami/kafka
 
+  schema:
+    image: confluentinc/cp-schema-registry:${CONFLUENT_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - broker
+    networks:
+      - ks_schema_network
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://${HOST_K1}:${PORT_EXT_K1},PLAINTEXT://${HOST_K2}:${PORT_EXT_K2},PLAINTEXT://${HOST_K3}:${PORT_EXT_K3}'
+      SCHEMA_REGISTRY_HOST_NAME: 'ks_b4_schema'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8085'
+      SCHEMA_REGISTRY_ADVERTISED_LISTENERS: 'http://${HOST_K4}:${PORT_SCHEMA4}'
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: '_schemas'
+      SCHEMA_REGISTRY_GROUP_ID: 'schema-registry-cluster'
+      SCHEMA_REGISTRY_MASTER_ELIGIBILITY: 'true'
+
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: '3'
+      SCHEMA_REGISTRY_KAFKASTORE_TIMEOUT_MS: '15000'
+      SCHEMA_REGISTRY_KAFKASTORE_INIT_TIMEOUT_MS: '60000'
+    ports:
+     - ${PORT_SCHEMA4}:8085
+    deploy:
+      placement:
+        constraints:
+          - node.labels.docker-server-2 == true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://0.0.0.0:8085/subjects || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
 volumes:
   kafka-data-4:
 
