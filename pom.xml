@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.personal</groupId>
+    <artifactId>learn-kafka</artifactId>
+    <version>1.0</version>
+
+<pluginRepositories>
+    <pluginRepository>
+        <id>confluent</id>
+        <url>https://packages.confluent.io/maven/</url>
+    </pluginRepository>
+</pluginRepositories>
+
+    <properties>
+        <schemaRegistryUrl>http://192.168.86.183:40300</schemaRegistryUrl>
+        <confluent.version>7.6.2</confluent.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>${confluent.version}</version>
+                <configuration>
+                    <schemaRegistryUrls>
+                        <param>${schemaRegistryUrl}</param>
+                    </schemaRegistryUrls>
+                    
+                </configuration>
+                <executions>
+
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                        <configuration>
+                            <subjects>
+                                <Orders-value>src/main/resources/order.avsc</Orders-value>
+                                <Flights-value>src/main/resources/flight.proto</Flights-value>
+                            </subjects>
+                            <schemaTypes>
+                                <Flights-value>PROTOBUF</Flights-value>
+                            </schemaTypes>
+
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>set-compatibility</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>set-compatibility</goal>
+                        </goals>
+                        <configuration>
+                            <compatibilityLevels>
+                                <Orders-value>FORWARD_TRANSITIVE</Orders-value>
+                                <Flights-value>FORWARD_TRANSITIVE</Flights-value>
+                            </compatibilityLevels>
+                        </configuration>
+                    </execution>
+
+
+                    <execution>
+                        <id>test-local</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>test-local-compatibility</goal>
+                        </goals>
+                        <configuration>
+                            <schemas>
+                                <order>src/main/resources/order.avsc</order>
+                                <flight>src/main/resources/flight.proto</flight>
+                            </schemas>
+                            <schemaTypes>
+                                <flight>ProtoBuf</flight>
+                            </schemaTypes>
+                            <previousSchemaPaths>
+                                <flight>src/main/resources/flightSchemas</flight>
+                                <order>src/main/resources/orderSchemas</order>
+                            </previousSchemaPaths>
+                            <compatibilityLevels>
+                                <order>FORWARD_TRANSITIVE</order>
+                                <flight>FORWARD_TRANSITIVE</flight>
+                            </compatibilityLevels>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>test-compatibility</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>test-compatibility</goal>
+                        </goals>
+                        <configuration>
+                            <subjects>
+                                <Orders-value>src/main/resources/order.avsc</Orders-value>
+                                <Flights-value>src/main/resources/flight.proto</Flights-value>
+                            </subjects>
+                            <schemaTypes>
+                                <Flights-value>PROTOBUF</Flights-value>
+                            </schemaTypes>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>register</id>
+                        <goals>
+                            <goal>register</goal>
+                        </goals>
+                        <configuration>
+                            <subjects>
+                                <Orders-value>src/main/resources/order.avsc</Orders-value>
+                                <Flights-value>src/main/resources/flight.proto</Flights-value>
+                            </subjects>
+                            <schemaTypes>
+                                <Flights-value>PROTOBUF</Flights-value>
+                            </schemaTypes>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+</project>
