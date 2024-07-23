@@ -1,7 +1,7 @@
 ## Setup
-# docker node update --label-add docker-server-1=true node1
-# docker node update --label-add docker-server-2=true node2
-# docker node update --label-add docker-server-3=true node3
+# docker node update --label-add docker-server-1=true ajftracerv
+# docker node update --label-add docker-server-2=true ajftracerv
+# docker node update --label-add docker-server-3=true ajftracerv
 ##
 #################
 # Kafka Node 1
@@ -54,7 +54,7 @@ services:
       - broker1
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://${HOST_K1}:${PORT_EXT_K1},PLAINTEXT://${HOST_K2}:${PORT_EXT_K2},PLAINTEXT://${HOST_K3}:${PORT_EXT_K3}'
-      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry-1'
+      SCHEMA_REGISTRY_HOST_NAME: 'http://${HOST_K1}:${PORT_SCHEMA1}'
       SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8085'
       SCHEMA_REGISTRY_ADVERTISED_LISTENERS: 'http://${HOST_K1}:${PORT_SCHEMA1}'
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
