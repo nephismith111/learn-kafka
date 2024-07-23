@@ -42,7 +42,7 @@
                         </goals>
                         <configuration>
                             <subjects>
-                                <event-warehouse-pick_ticket-create-completed-value>topics/terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
+                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
                             </subjects>
                             <schemaTypes>
                                 <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
