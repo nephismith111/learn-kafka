@@ -8,7 +8,7 @@
 #################
 version: "3.8"
 services:
-  broker1:
+  broker:
     image: bitnami/kafka:3.7
     networks:
       - ks_schema_network
@@ -49,7 +49,7 @@ services:
       - kafka-data-1:/bitnami/kafka
 
 
-  schema1:
+  schema:
     image: confluentinc/cp-schema-registry:${CONFLUENT_VERSION:-latest}
     restart: unless-stopped
     depends_on:

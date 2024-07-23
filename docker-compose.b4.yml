@@ -17,7 +17,7 @@
 #################
 version: "3.8"
 services:
-  broker4:
+  broker:
     image: bitnami/kafka:3.7
     networks:
       - ks_schema_network
