@@ -44,11 +44,11 @@
                             <subjects>
                                 <Orders-value>src/main/resources/order.avsc</Orders-value>
                                 <Flights-value>src/main/resources/flight.proto</Flights-value>
-                                <event-warehouse-pick_ticket-create-completed-value>src/main/resources/event-warehouse-pick.json</event-warehouse-pick_ticket-create-completed-value>
+                                <event-v1-warehouse-pick_ticket-create-completed-value>topics/terraform/event-v1-warehouse-pick_ticket-create-completed.json</event-v1-warehouse-pick_ticket-create-completed-value>
                             </subjects>
                             <schemaTypes>
                                 <Flights-value>PROTOBUF</Flights-value>
-                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
+                                <event-v1-warehouse-pick_ticket-create-completed-value>JSON</event-v1-warehouse-pick_ticket-create-completed-value>
                             </schemaTypes>
 
                         </configuration>
@@ -64,7 +64,7 @@
                             <compatibilityLevels>
                                 <Orders-value>FORWARD_TRANSITIVE</Orders-value>
                                 <Flights-value>FORWARD_TRANSITIVE</Flights-value>
-                                <event-warehouse-pick_ticket-create-completed-value>FORWARD_TRANSITIVE</event-warehouse-pick_ticket-create-completed-value>
+                                <event-v1-warehouse-pick_ticket-create-completed-value>FORWARD_TRANSITIVE</event-v1-warehouse-pick_ticket-create-completed-value>
                             </compatibilityLevels>
                         </configuration>
                     </execution>
@@ -80,21 +80,21 @@
                             <schemas>
                                 <order>src/main/resources/order.avsc</order>
                                 <flight>src/main/resources/flight.proto</flight>
-                                <event-warehouse-pick_ticket-create-completed>src/main/resources/event-warehouse-pick.json</event-warehouse-pick_ticket-create-completed>
+                                <event-v1-warehouse-pick_ticket-create-completed>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick_ticket-create-completed>
                             </schemas>
                             <schemaTypes>
                                 <flight>ProtoBuf</flight>
-                                <event-warehouse-pick_ticket-create-completed>JSON</event-warehouse-pick_ticket-create-completed>
+                                <event-v1-warehouse-pick_ticket-create-completed>JSON</event-v1-warehouse-pick_ticket-create-completed>
                             </schemaTypes>
                             <previousSchemaPaths>
                                 <flight>src/main/resources/flightSchemas</flight>
                                 <order>src/main/resources/orderSchemas</order>
-                                <event-warehouse-pick_ticket-create-completed>src/main/resources/warehousePickSchemas</event-warehouse-pick_ticket-create-completed>
+                                <event-v1-warehouse-pick_ticket-create-completed>src/main/resources/warehousePickSchemas</event-v1-warehouse-pick_ticket-create-completed>
                             </previousSchemaPaths>
                             <compatibilityLevels>
                                 <order>FORWARD_TRANSITIVE</order>
                                 <flight>FORWARD_TRANSITIVE</flight>
-                                <event-warehouse-pick_ticket-create-completed>FORWARD_TRANSITIVE</event-warehouse-pick_ticket-create-completed>
+                                <event-v1-warehouse-pick_ticket-create-completed>FORWARD_TRANSITIVE</event-v1-warehouse-pick_ticket-create-completed>
                             </compatibilityLevels>
                         </configuration>
                     </execution>
@@ -109,11 +109,11 @@
                             <subjects>
                                 <Orders-value>src/main/resources/order.avsc</Orders-value>
                                 <Flights-value>src/main/resources/flight.proto</Flights-value>
-                                <event-warehouse-pick_ticket-create-completed-value>src/main/resources/event-warehouse-pick.json</event-warehouse-pick_ticket-create-completed-value>
+                                <event-v1-warehouse-pick_ticket-create-completed-value>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick_ticket-create-completed-value>
                             </subjects>
                             <schemaTypes>
                                 <Flights-value>PROTOBUF</Flights-value>
-                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
+                                <event-v1-warehouse-pick_ticket-create-completed-value>JSON</event-v1-warehouse-pick_ticket-create-completed-value>
                             </schemaTypes>
                         </configuration>
                     </execution>
@@ -127,11 +127,11 @@
                             <subjects>
                                 <Orders-value>src/main/resources/order.avsc</Orders-value>
                                 <Flights-value>src/main/resources/flight.proto</Flights-value>
-                                <event-warehouse-pick-value>src/main/resources/event-warehouse-pick.json</event-warehouse-pick-value>
+                                <event-v1-warehouse-pick-value>src/main/resources/event-v1-warehouse-pick.json</event-v1-warehouse-pick-value>
                             </subjects>
                             <schemaTypes>
                                 <Flights-value>PROTOBUF</Flights-value>
-                                <event-warehouse-pick-value>JSON</event-warehouse-pick-value>
+                                <event-v1-warehouse-pick-value>JSON</event-v1-warehouse-pick-value>
                             </schemaTypes>
                         </configuration>
                     </execution>
