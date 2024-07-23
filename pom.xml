@@ -73,16 +73,16 @@
                         </goals>
                         <configuration>
                             <schemas>
-                                <event-warehouse-pick_ticket-create-completed>src/main/resources/event-warehouse-pick.json</event-warehouse-pick_ticket-create-completed>
+                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
                             </schemas>
                             <schemaTypes>
-                                <event-warehouse-pick_ticket-create-completed>JSON</event-warehouse-pick_ticket-create-completed>
+                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
                             </schemaTypes>
                             <previousSchemaPaths>
-                                <event-warehouse-pick_ticket-create-completed>src/main/resources/warehousePickSchemas</event-warehouse-pick_ticket-create-completed>
+                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/warehousePickSchemas</event-warehouse-pick_ticket-create-completed-value>
                             </previousSchemaPaths>
                             <compatibilityLevels>
-                                <event-warehouse-pick_ticket-create-completed>FORWARD_TRANSITIVE</event-warehouse-pick_ticket-create-completed>
+                                <event-warehouse-pick_ticket-create-completed-value>FORWARD_TRANSITIVE</event-warehouse-pick_ticket-create-completed-value>
                             </compatibilityLevels>
                         </configuration>
                     </execution>
@@ -95,7 +95,7 @@
                         </goals>
                         <configuration>
                             <subjects>
-                                <event-warehouse-pick_ticket-create-completed-value>src/main/resources/event-warehouse-pick.json</event-warehouse-pick_ticket-create-completed-value>
+                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
                             </subjects>
                             <schemaTypes>
                                 <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
@@ -110,10 +110,10 @@
                         </goals>
                         <configuration>
                             <subjects>
-                                <event-warehouse-pick-value>src/main/resources/event-warehouse-pick.json</event-warehouse-pick-value>
+                                <event-warehouse-pick_ticket-create-completed-value>topics_terraform/event-warehouse-pick_ticket-create-completed.json</event-warehouse-pick_ticket-create-completed-value>
                             </subjects>
                             <schemaTypes>
-                                <event-warehouse-pick-value>JSON</event-warehouse-pick-value>
+                                <event-warehouse-pick_ticket-create-completed-value>JSON</event-warehouse-pick_ticket-create-completed-value>
                             </schemaTypes>
                         </configuration>
                     </execution>
