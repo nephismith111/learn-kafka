@@ -54,7 +54,7 @@ services:
     image: confluentinc/cp-schema-registry:${CONFLUENT_VERSION:-latest}
     restart: unless-stopped
     depends_on:
-      - broker2
+      - broker
     networks:
       - ks_schema_network
     environment:
